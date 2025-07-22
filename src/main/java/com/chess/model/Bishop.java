@@ -1,8 +1,9 @@
 package com.chess.model;
 
 /**
- * Represents a Bishop piece. Moves any number of squares diagonally,
- * as long as the path is clear.
+ * Represents a Bishop piece in chess.
+ * Bishops move diagonally any number of squares.
+ * They cannot jump over other pieces.
  */
 public class Bishop extends Piece {
 
@@ -11,35 +12,36 @@ public class Bishop extends Piece {
     }
 
     /**
-     * Validates the move:
-     * - Must be a diagonal move.
-     * - Path must be clear (no pieces in between).
+     * Validates Bishop's movement:
+     * - Moves diagonally: abs(rowDiff) == abs(colDiff)
+     * - Cannot jump over other pieces.
+     * - Cannot capture piece of the same color.
      */
     @Override
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
-        int rowDiff = Math.abs(toRow - this.row);
-        int colDiff = Math.abs(toCol - this.col);
+        int rowDiff = toRow - this.row;
+        int colDiff = toCol - this.col;
 
-        // Must move diagonally
-        if (rowDiff != colDiff) {
-            return false;
-        }
+        if (Math.abs(rowDiff) != Math.abs(colDiff)) return false;
 
-        int rowStep = (toRow - this.row) / rowDiff;
-        int colStep = (toCol - this.col) / colDiff;
+        int rowStep = rowDiff > 0 ? 1 : -1;
+        int colStep = colDiff > 0 ? 1 : -1;
 
-        // Check each cell along the path
         int currentRow = this.row + rowStep;
         int currentCol = this.col + colStep;
+
+        // Check if the path is clear
         while (currentRow != toRow && currentCol != toCol) {
             if (board[currentRow][currentCol] != null) {
-                return false; // Path blocked
+                return false;
             }
             currentRow += rowStep;
             currentCol += colStep;
         }
 
-        return true;
+        // Final square: must be empty or enemy piece
+        Piece destination = board[toRow][toCol];
+        return destination == null || !destination.getColor().equals(this.color);
     }
 
     @Override
