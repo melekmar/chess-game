@@ -1,0 +1,79 @@
+package com.chess.model;
+
+/**
+ * Represents the 8x8 chess board.
+ * Manages piece placement, retrieval, and board state.
+ */
+public class Board {
+    private Piece[][] grid;
+
+    public Board() {
+        grid = new Piece[8][8];
+        initializeBoard();
+    }
+
+    // Places all pieces in their initial positions
+    private void initializeBoard() {
+        // Place black pieces
+        grid[0][0] = new Rook(0, 0, "BLACK");
+        grid[0][1] = new Knight(0, 1, "BLACK");
+        grid[0][2] = new Bishop(0, 2, "BLACK");
+        grid[0][3] = new Queen(0, 3, "BLACK");
+        grid[0][4] = new King(0, 4, "BLACK");
+        grid[0][5] = new Bishop(0, 5, "BLACK");
+        grid[0][6] = new Knight(0, 6, "BLACK");
+        grid[0][7] = new Rook(0, 7, "BLACK");
+        for (int i = 0; i < 8; i++) {
+            grid[1][i] = new Pawn(1, i, "BLACK");
+        }
+
+        // Place white pieces
+        grid[7][0] = new Rook(7, 0, "WHITE");
+        grid[7][1] = new Knight(7, 1, "WHITE");
+        grid[7][2] = new Bishop(7, 2, "WHITE");
+        grid[7][3] = new Queen(7, 3, "WHITE");
+        grid[7][4] = new King(7, 4, "WHITE");
+        grid[7][5] = new Bishop(7, 5, "WHITE");
+        grid[7][6] = new Knight(7, 6, "WHITE");
+        grid[7][7] = new Rook(7, 7, "WHITE");
+        for (int i = 0; i < 8; i++) {
+            grid[6][i] = new Pawn(6, i, "WHITE");
+        }
+    }
+
+    public Piece getPiece(int row, int col) {
+        return grid[row][col];
+    }
+
+    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        Piece moving = grid[fromRow][fromCol];
+        if (moving != null) {
+            moving.setPosition(toRow, toCol);
+            grid[toRow][toCol] = moving;
+            grid[fromRow][fromCol] = null;
+        }
+    }
+
+    public void printBoard() {
+        System.out.println("    A   B   C   D   E   F   G   H");
+        System.out.println("  +---+---+---+---+---+---+---+---+");
+        for (int row = 0; row < 8; row++) {
+            System.out.print((8 - row) + " |");
+            for (int col = 0; col < 8; col++) {
+                if (grid[row][col] == null) {
+                    System.out.print("   |");
+                } else {
+                    String symbol = grid[row][col].toString().substring(0, 2); // e.g., "Wh", "Bl"
+                    System.out.print(" " + symbol + "|");
+                }
+            }
+            System.out.println(" " + (8 - row));
+            System.out.println("  +---+---+---+---+---+---+---+---+");
+        }
+        System.out.println("    A   B   C   D   E   F   G   H");
+    }
+
+    public Piece[][] getGrid() {
+        return grid;
+    }
+}
