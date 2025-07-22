@@ -2,7 +2,7 @@ package com.chess.model;
 
 /**
  * Abstract class representing a chess piece.
- * Each piece has a position (row, col), a color, and can be a king.
+ * Each piece has a position (row, col) and a color.
  */
 public abstract class Piece {
     protected int row;
@@ -15,22 +15,20 @@ public abstract class Piece {
         this.color = color;
     }
 
-    // Abstract method to be implemented by each subclass to validate moves
+    // Abstract method: to be implemented by subclasses to define their valid moves
     public abstract boolean isValidMove(int toRow, int toCol, Piece[][] board);
 
-    // Getters
     public int getRow() { return row; }
     public int getCol() { return col; }
     public String getColor() { return color; }
 
-    // Updates the position of the piece after a move
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
     }
 
-    // Default display
     public String toString() {
-        return this.color + " Piece";
+        return color + " Piece";
     }
 }
+

@@ -1,0 +1,7 @@
+com\chess\model\Board.class
+com\chess\model\King.class
+com\chess\service\GameService.class
+com\chess\model\Knight.class
+com\chess\model\Piece.class
+com\chess\model\Player.class
+com\chess\model\Pawn.class
