@@ -44,6 +44,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+                <configuration>
+                    <mainClass>com.chess.ChessApplication</mainClass>
+                </configuration>
             </plugin>
 
             <!-- Compiler Plugin for Java 17 -->
