@@ -1,45 +1,40 @@
 package com.chess.model;
 
-/**
- * Represents a Rook piece. Moves in straight lines (horizontal or vertical).
- */
 public class Rook extends Piece {
 
     public Rook(int row, int col, String color) {
         super(row, col, color);
     }
 
-    /**
-     * Valid move for a Rook: any number of squares in straight lines
-     * without jumping over pieces.
-     */
     @Override
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
-        if (this.row != toRow && this.col != toCol) {
-            return false; // Not a straight line
+        if (row != toRow && col != toCol) {
+            return false; // Rook moves only in straight lines
         }
 
-        int rowDirection = Integer.compare(toRow, this.row);
-        int colDirection = Integer.compare(toCol, this.col);
+        // Check for obstacles in the path
+        int stepRow = Integer.compare(toRow, row);
+        int stepCol = Integer.compare(toCol, col);
+        int currRow = row + stepRow;
+        int currCol = col + stepCol;
 
-        int currentRow = this.row + rowDirection;
-        int currentCol = this.col + colDirection;
-
-        // Check if there are pieces blocking the path
-        while (currentRow != toRow || currentCol != toCol) {
-            if (board[currentRow][currentCol] != null) {
-                return false; // Blocked path
+        while (currRow != toRow || currCol != toCol) {
+            if (board[currRow][currCol] != null) {
+                return false; // Path is blocked
             }
-            currentRow += rowDirection;
-            currentCol += colDirection;
+            currRow += stepRow;
+            currCol += stepCol;
         }
 
-        return true;
+        // Check destination cell
+        Piece target = board[toRow][toCol];
+        return target == null || !target.getColor().equals(this.color);
     }
 
     @Override
-    public String toString() {
-        return this.color + " Rook";
+    public String getType() {
+        return "Rook";
     }
 }
+
 
