@@ -4,42 +4,34 @@ import com.chess.model.Match;
 import com.chess.model.Piece;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/chess")
 public class ChessController {
 
     private final Match match = new Match();
 
-    /**
-     * Returns the current state of the chess board.
-     */
     @GetMapping("/board")
     public Piece[][] getBoard() {
         return match.getBoard().getGrid();
     }
 
-    /**
-     * Processes a move request from the frontend.
-     */
     @PostMapping("/move")
-    public String movePiece(@RequestParam int startRow,
-                            @RequestParam int startCol,
-                            @RequestParam int endRow,
-                            @RequestParam int endCol) {
+    public Map<String, Object> movePiece(@RequestParam int fromRow, @RequestParam int fromCol,
+                                         @RequestParam int toRow, @RequestParam int toCol) {
+        Map<String, Object> response = new HashMap<>();
 
-        boolean moveSuccess = match.move(startRow, startCol, endRow, endCol);
-        if (moveSuccess) {
-            return "Move successful. It's now " + match.getCurrentPlayer().getColor() + "'s turn.";
+        boolean success = match.move(fromRow, fromCol, toRow, toCol);
+        if (success) {
+            response.put("status", "success");
+            response.put("message", "Move completed successfully.");
+            response.put("nextPlayer", match.getCurrentPlayer().getColor());
         } else {
-            return "Invalid move.";
+            response.put("status", "error");
+            response.put("message", "Invalid move.");
         }
-    }
-
-    /**
-     * Returns which player's turn it is.
-     */
-    @GetMapping("/turn")
-    public String getCurrentTurn() {
-        return match.getCurrentPlayer().getColor();
+        return response;
     }
 }
