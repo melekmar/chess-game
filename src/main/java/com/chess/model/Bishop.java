@@ -1,52 +1,38 @@
 package com.chess.model;
 
-/**
- * Represents a Bishop piece in chess.
- * Bishops move diagonally any number of squares.
- * They cannot jump over other pieces.
- */
 public class Bishop extends Piece {
 
     public Bishop(int row, int col, String color) {
         super(row, col, color);
     }
 
-    /**
-     * Validates Bishop's movement:
-     * - Moves diagonally: abs(rowDiff) == abs(colDiff)
-     * - Cannot jump over other pieces.
-     * - Cannot capture piece of the same color.
-     */
     @Override
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
-        int rowDiff = toRow - this.row;
-        int colDiff = toCol - this.col;
-
-        if (Math.abs(rowDiff) != Math.abs(colDiff)) return false;
-
-        int rowStep = rowDiff > 0 ? 1 : -1;
-        int colStep = colDiff > 0 ? 1 : -1;
-
-        int currentRow = this.row + rowStep;
-        int currentCol = this.col + colStep;
-
-        // Check if the path is clear
-        while (currentRow != toRow && currentCol != toCol) {
-            if (board[currentRow][currentCol] != null) {
-                return false;
-            }
-            currentRow += rowStep;
-            currentCol += colStep;
+        int rowDiff = Math.abs(toRow - row);
+        int colDiff = Math.abs(toCol - col);
+        if (rowDiff != colDiff) {
+            return false; // Must move diagonally
         }
 
-        // Final square: must be empty or enemy piece
+        int stepRow = (toRow - row) > 0 ? 1 : -1;
+        int stepCol = (toCol - col) > 0 ? 1 : -1;
+        int currRow = row + stepRow;
+        int currCol = col + stepCol;
+
+        while (currRow != toRow && currCol != toCol) {
+            if (board[currRow][currCol] != null) {
+                return false; // Path is blocked
+            }
+            currRow += stepRow;
+            currCol += stepCol;
+        }
+
         Piece destination = board[toRow][toCol];
         return destination == null || !destination.getColor().equals(this.color);
     }
 
     @Override
-    public String toString() {
-        return this.color + " Bishop";
+    public String getType() {
+        return "Bishop";
     }
 }
-
