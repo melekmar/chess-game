@@ -1,8 +1,5 @@
 package com.chess.model;
 
-/**
- * Manages the game state, player turns, and interactions between players and the board.
- */
 public class Match {
     private Board board;
     private Player whitePlayer;
@@ -11,25 +8,29 @@ public class Match {
 
     public Match() {
         this.board = new Board(); // Initialize the 8x8 board
-        this.whitePlayer = new Player("WHITE"); // Create white player
-        this.blackPlayer = new Player("BLACK"); // Create black player
+        this.whitePlayer = new Player("WHITE");
+        this.blackPlayer = new Player("BLACK");
         this.currentPlayer = whitePlayer; // White starts
         initializePieces(); // Set up all pieces on the board
     }
 
     /**
-     * Initialize the standard chess setup for both players.
+     * Initializes the chess board with standard piece placement.
      */
     private void initializePieces() {
-        // Initialize pawns
+        // Place pawns
         for (int col = 0; col < 8; col++) {
-            board.setPiece(1, col, new Pawn(1, col, "BLACK"));
-            board.setPiece(6, col, new Pawn(6, col, "WHITE"));
-            blackPlayer.addPiece(board.getPiece(1, col));
-            whitePlayer.addPiece(board.getPiece(6, col));
+            Pawn blackPawn = new Pawn(1, col, "BLACK");
+            Pawn whitePawn = new Pawn(6, col, "WHITE");
+
+            board.setPiece(1, col, blackPawn);
+            board.setPiece(6, col, whitePawn);
+
+            blackPlayer.addPiece(blackPawn);
+            whitePlayer.addPiece(whitePawn);
         }
 
-        // Place the other major pieces
+        // Place major pieces using ordered array
         String[] pieceOrder = {"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"};
 
         for (int col = 0; col < 8; col++) {
@@ -45,7 +46,7 @@ public class Match {
     }
 
     /**
-     * Factory method to create specific pieces by name.
+     * Factory method to create pieces based on type.
      */
     private Piece createPiece(String type, int row, int col, String color) {
         switch (type) {
@@ -64,26 +65,28 @@ public class Match {
     public boolean move(int fromRow, int fromCol, int toRow, int toCol) {
         Piece piece = board.getPiece(fromRow, fromCol);
         if (piece == null || !piece.getColor().equals(currentPlayer.getColor())) {
-            return false; // Invalid piece or wrong player
+            return false; // Invalid piece or wrong player's turn
         }
 
         if (!piece.isValidMove(toRow, toCol, board.getGrid())) {
-            return false; // Invalid movement
+            return false; // Invalid movement logic
         }
 
-        // Capture if enemy piece is present
+        // Handle capture
         Piece target = board.getPiece(toRow, toCol);
         if (target != null) {
-            if (target.getColor().equals(currentPlayer.getColor())) return false;
+            if (target.getColor().equals(currentPlayer.getColor())) {
+                return false; // Can't capture own piece
+            }
             getOpponent().removePiece(target);
         }
 
-        // Move piece
+        // Apply move
         board.setPiece(toRow, toCol, piece);
         board.setPiece(fromRow, fromCol, null);
         piece.setPosition(toRow, toCol);
 
-        // Switch player
+        // Switch player turn
         currentPlayer = getOpponent();
         return true;
     }
@@ -92,7 +95,7 @@ public class Match {
      * Returns the opponent of the current player.
      */
     public Player getOpponent() {
-        return (currentPlayer == whitePlayer) ? blackPlayer : whitePlayer;
+        return currentPlayer == whitePlayer ? blackPlayer : whitePlayer;
     }
 
     public Board getBoard() {
@@ -103,3 +106,4 @@ public class Match {
         return currentPlayer;
     }
 }
+
