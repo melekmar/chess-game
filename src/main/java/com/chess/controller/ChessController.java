@@ -23,15 +23,21 @@ public class ChessController {
                                          @RequestParam int toRow, @RequestParam int toCol) {
         Map<String, Object> response = new HashMap<>();
 
-        boolean success = match.move(fromRow, fromCol, toRow, toCol);
-        if (success) {
-            response.put("status", "success");
-            response.put("message", "Move completed successfully.");
-            response.put("nextPlayer", match.getCurrentPlayer().getColor());
-        } else {
+        try {
+            boolean success = match.move(fromRow, fromCol, toRow, toCol);
+            if (success) {
+                response.put("status", "success");
+                response.put("message", "Move completed successfully.");
+                response.put("nextPlayer", match.getCurrentPlayer().getColor());
+            } else {
+                response.put("status", "error");
+                response.put("message", "Invalid move.");
+            }
+        } catch (Exception e) {
             response.put("status", "error");
-            response.put("message", "Invalid move.");
+            response.put("message", "Unexpected server error: " + e.getMessage());
         }
+
         return response;
     }
 }
