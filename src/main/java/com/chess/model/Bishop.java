@@ -1,7 +1,8 @@
 package com.chess.model;
 
 /**
- * Represents a Bishop piece. Moves diagonally on the board.
+ * Represents a Bishop piece. Moves any number of squares diagonally,
+ * as long as the path is clear.
  */
 public class Bishop extends Piece {
 
@@ -10,8 +11,9 @@ public class Bishop extends Piece {
     }
 
     /**
-     * Valid move for a Bishop: moves diagonally any number of squares
-     * without jumping over other pieces.
+     * Validates the move:
+     * - Must be a diagonal move.
+     * - Path must be clear (no pieces in between).
      */
     @Override
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
@@ -23,19 +25,18 @@ public class Bishop extends Piece {
             return false;
         }
 
-        int rowDirection = Integer.compare(toRow, this.row);
-        int colDirection = Integer.compare(toCol, this.col);
+        int rowStep = (toRow - this.row) / rowDiff;
+        int colStep = (toCol - this.col) / colDiff;
 
-        int currentRow = this.row + rowDirection;
-        int currentCol = this.col + colDirection;
-
-        // Check each square along the path for blocking pieces
+        // Check each cell along the path
+        int currentRow = this.row + rowStep;
+        int currentCol = this.col + colStep;
         while (currentRow != toRow && currentCol != toCol) {
             if (board[currentRow][currentCol] != null) {
-                return false; // Path is blocked
+                return false; // Path blocked
             }
-            currentRow += rowDirection;
-            currentCol += colDirection;
+            currentRow += rowStep;
+            currentCol += colStep;
         }
 
         return true;
@@ -46,3 +47,4 @@ public class Bishop extends Piece {
         return this.color + " Bishop";
     }
 }
+
