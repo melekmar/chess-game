@@ -3,6 +3,7 @@ package com.chess.controller;
 import com.chess.model.Match;
 import com.chess.model.Move;
 import com.chess.model.Piece;
+import com.chess.model.MoveValidationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -39,6 +40,9 @@ public class ChessController {
                 response.put("status", "error");
                 response.put("message", "Invalid move.");
             }
+        } catch (MoveValidationException e) {
+            response.put("status", "error");
+            response.put("message", e.getMessage());
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", "Unexpected server error: " + e.getMessage());
