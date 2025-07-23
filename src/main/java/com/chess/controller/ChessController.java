@@ -11,7 +11,7 @@ import java.util.Map;
 @RequestMapping("/api/chess")
 public class ChessController {
 
-    private final Match match = new Match();
+    private Match match = new Match();
 
     @GetMapping("/board")
     public Piece[][] getBoard() {
@@ -54,6 +54,15 @@ public class ChessController {
         status.put("winner", match.getWinner());
         status.put("currentPlayer", match.getCurrentPlayer().getColor());
         return status;
+    }
+
+    @PostMapping("/reset")
+    public Map<String, Object> resetGame() {
+        match = new Match();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Game has been reset.");
+        return response;
     }
 }
 
