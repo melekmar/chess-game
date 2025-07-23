@@ -14,7 +14,7 @@ public class Match {
     private final List<Move> moveHistory = new ArrayList<>();
 
     public Match() {
-        reset(); // Appelle reset pour initialiser tout
+        reset();
     }
 
     public void reset() {
@@ -66,22 +66,29 @@ public class Match {
     }
 
     public boolean move(int fromRow, int fromCol, int toRow, int toCol) {
-        if (gameOver) return false;
+        if (gameOver) {
+            throw new MoveValidationException("La partie est terminée.");
+        }
 
         Piece piece = board.getPiece(fromRow, fromCol);
-        if (piece == null || !piece.getColor().equals(currentPlayer.getColor())) {
-            return false;
+        if (piece == null) {
+            throw new MoveValidationException("Aucune pièce à cette position.");
+        }
+
+        if (!piece.getColor().equals(currentPlayer.getColor())) {
+            throw new MoveValidationException("Ce n’est pas le tour du joueur " + piece.getColor() + ".");
         }
 
         if (!piece.isValidMove(toRow, toCol, board.getGrid())) {
-            return false;
+            throw new MoveValidationException("Déplacement invalide pour la pièce " + piece.getType() + ".");
         }
 
         Piece target = board.getPiece(toRow, toCol);
         if (target != null && target.getColor().equals(currentPlayer.getColor())) {
-            return false;
+            throw new MoveValidationException("Impossible de capturer votre propre pièce.");
         }
 
+        // Enregistrement du mouvement
         Move move = new Move(fromRow, fromCol, toRow, toCol, piece, target);
         moveHistory.add(move);
 
@@ -114,7 +121,12 @@ public class Match {
         movedPiece.setPosition(lastMove.getFromRow(), lastMove.getFromCol());
 
         if (lastMove.getCapturedPiece() != null) {
-            Piece restored = createPiece(lastMove.getCapturedPiece(), lastMove.getToRow(), lastMove.getToCol(), getOpponent().getColor());
+            Piece restored = createPiece(
+                lastMove.getCapturedPiece(),
+                lastMove.getToRow(),
+                lastMove.getToCol(),
+                getOpponent().getColor()
+            );
             board.setPiece(lastMove.getToRow(), lastMove.getToCol(), restored);
             getOpponent().addPiece(restored);
         } else {
