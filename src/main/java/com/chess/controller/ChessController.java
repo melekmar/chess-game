@@ -48,11 +48,22 @@ public class ChessController {
     @GetMapping("/pieces")
     public Map<String, Object> getRemainingPieces() {
         Map<String, Object> result = new HashMap<>();
-
         result.put("WHITE", match.getWhitePlayer().getPieces());
         result.put("BLACK", match.getBlackPlayer().getPieces());
-
         return result;
+    }
+
+    @GetMapping("/status")
+    public Map<String, Object> getGameStatus() {
+        Map<String, Object> status = new HashMap<>();
+        status.put("currentPlayer", match.getCurrentPlayer().getColor());
+        status.put("gameOver", match.isGameOver());
+        status.put("winner", match.getWinner());
+        status.put("remainingPieces", Map.of(
+                "WHITE", match.getWhitePlayer().getPieces().size(),
+                "BLACK", match.getBlackPlayer().getPieces().size()
+        ));
+        return status;
     }
 }
 
