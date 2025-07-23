@@ -6,7 +6,7 @@ public class Match {
     private Player blackPlayer;
     private Player currentPlayer;
     private boolean gameOver = false;
-    private String winner = null;
+    private Player winner = null; // Change from String to Player
 
     public Match() {
         this.board = new Board(); // Initialize the 8x8 board
@@ -72,8 +72,8 @@ public class Match {
 
             if (target instanceof King) {
                 gameOver = true;
-                winner = currentPlayer.getColor();
-                System.out.println("Game Over! " + winner + " wins.");
+                winner = currentPlayer;
+                System.out.println("Game Over! " + winner.getColor() + " wins.");
             }
         }
 
@@ -104,7 +104,7 @@ public class Match {
         return gameOver;
     }
 
-    public String getWinner() {
+    public Player getWinner() {
         return winner;
     }
 
