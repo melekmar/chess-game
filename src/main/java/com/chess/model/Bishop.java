@@ -10,25 +10,23 @@ public class Bishop extends Piece {
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
         int rowDiff = Math.abs(toRow - row);
         int colDiff = Math.abs(toCol - col);
-        if (rowDiff != colDiff) {
-            return false; // Must move diagonally
+
+        if (rowDiff != colDiff) return false;
+
+        int rowStep = Integer.compare(toRow, row);
+        int colStep = Integer.compare(toCol, col);
+
+        int currentRow = row + rowStep;
+        int currentCol = col + colStep;
+
+        while (currentRow != toRow && currentCol != toCol) {
+            if (board[currentRow][currentCol] != null) return false;
+            currentRow += rowStep;
+            currentCol += colStep;
         }
 
-        int stepRow = (toRow - row) > 0 ? 1 : -1;
-        int stepCol = (toCol - col) > 0 ? 1 : -1;
-        int currRow = row + stepRow;
-        int currCol = col + stepCol;
-
-        while (currRow != toRow && currCol != toCol) {
-            if (board[currRow][currCol] != null) {
-                return false; // Path is blocked
-            }
-            currRow += stepRow;
-            currCol += stepCol;
-        }
-
-        Piece destination = board[toRow][toCol];
-        return destination == null || !destination.getColor().equals(this.color);
+        Piece target = board[toRow][toCol];
+        return target == null || !target.getColor().equals(color);
     }
 
     @Override

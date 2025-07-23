@@ -8,27 +8,22 @@ public class Rook extends Piece {
 
     @Override
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
-        if (row != toRow && col != toCol) {
-            return false; // Rook moves only in straight lines
+        if (row != toRow && col != toCol) return false; // Pas ligne ou colonne = invalide
+
+        int rowStep = Integer.compare(toRow, row);
+        int colStep = Integer.compare(toCol, col);
+
+        int currentRow = row + rowStep;
+        int currentCol = col + colStep;
+
+        while (currentRow != toRow || currentCol != toCol) {
+            if (board[currentRow][currentCol] != null) return false; // Obstacle détecté
+            currentRow += rowStep;
+            currentCol += colStep;
         }
 
-        // Check for obstacles in the path
-        int stepRow = Integer.compare(toRow, row);
-        int stepCol = Integer.compare(toCol, col);
-        int currRow = row + stepRow;
-        int currCol = col + stepCol;
-
-        while (currRow != toRow || currCol != toCol) {
-            if (board[currRow][currCol] != null) {
-                return false; // Path is blocked
-            }
-            currRow += stepRow;
-            currCol += stepCol;
-        }
-
-        // Check destination cell
-        Piece target = board[toRow][toCol];
-        return target == null || !target.getColor().equals(this.color);
+        Piece destination = board[toRow][toCol];
+        return destination == null || !destination.getColor().equals(color);
     }
 
     @Override
@@ -36,5 +31,3 @@ public class Rook extends Piece {
         return "Rook";
     }
 }
-
-

@@ -8,25 +8,34 @@ public class Pawn extends Piece {
 
     @Override
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
-        int direction = color.equals("WHITE") ? -1 : 1;  // White moves up, Black moves down
+        int direction = color.equals("WHITE") ? -1 : 1;  // WHITE moves up, BLACK moves down
         int rowDiff = toRow - row;
-        int colDiff = Math.abs(toCol - col);
+        int colDiff = toCol - col;
 
-        // Move forward
-        if (colDiff == 0 && board[toRow][toCol] == null) {
-            if (rowDiff == direction) return true;
+        // Check boundaries
+        if (toRow < 0 || toRow >= 8 || toCol < 0 || toCol >= 8) {
+            return false;
+        }
 
-            // First move: two squares
-            if ((color.equals("WHITE") && row == 6 || color.equals("BLACK") && row == 1) &&
-                rowDiff == 2 * direction && board[row + direction][col] == null) {
+        // Moving forward
+        if (colDiff == 0) {
+            if (rowDiff == direction && board[toRow][toCol] == null) {
+                return true;
+            }
+            if ((color.equals("WHITE") && row == 6 || color.equals("BLACK") && row == 1)
+                    && rowDiff == 2 * direction
+                    && board[row + direction][col] == null
+                    && board[toRow][toCol] == null) {
                 return true;
             }
         }
 
-        // Capture
-        if (colDiff == 1 && rowDiff == direction && board[toRow][toCol] != null &&
-            !board[toRow][toCol].getColor().equals(color)) {
-            return true;
+        // Capturing diagonally
+        if (Math.abs(colDiff) == 1 && rowDiff == direction) {
+            Piece target = board[toRow][toCol];
+            if (target != null && !target.getColor().equals(this.color)) {
+                return true;
+            }
         }
 
         return false;

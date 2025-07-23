@@ -11,7 +11,6 @@ public class King extends Piece {
         int rowDiff = Math.abs(toRow - row);
         int colDiff = Math.abs(toCol - col);
 
-        // King moves one square in any direction
         if (rowDiff <= 1 && colDiff <= 1) {
             Piece target = board[toRow][toCol];
             return target == null || !target.getColor().equals(color);

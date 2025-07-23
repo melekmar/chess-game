@@ -8,27 +8,13 @@ public class Queen extends Piece {
 
     @Override
     public boolean isValidMove(int toRow, int toCol, Piece[][] board) {
-        int rowDiff = toRow - row;
-        int colDiff = toCol - col;
+        int rowDiff = Math.abs(toRow - row);
+        int colDiff = Math.abs(toCol - col);
 
-        // Check if the move is in a straight line or diagonal
-        if (row == toRow || col == toCol || Math.abs(rowDiff) == Math.abs(colDiff)) {
-            int rowDirection = Integer.compare(rowDiff, 0);
-            int colDirection = Integer.compare(colDiff, 0);
-
-            int currentRow = row + rowDirection;
-            int currentCol = col + colDirection;
-
-            // Check each square along the path for obstructions
-            while (currentRow != toRow || currentCol != toCol) {
-                if (board[currentRow][currentCol] != null) return false;
-                currentRow += rowDirection;
-                currentCol += colDirection;
-            }
-
-            // Check the target square
-            Piece target = board[toRow][toCol];
-            return target == null || !target.getColor().equals(color);
+        if (row == toRow || col == toCol) {
+            return new Rook(row, col, color).isValidMove(toRow, toCol, board);
+        } else if (rowDiff == colDiff) {
+            return new Bishop(row, col, color).isValidMove(toRow, toCol, board);
         }
 
         return false;

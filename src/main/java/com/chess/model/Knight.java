@@ -11,13 +11,12 @@ public class Knight extends Piece {
         int rowDiff = Math.abs(toRow - row);
         int colDiff = Math.abs(toCol - col);
 
-        // Valid knight move: L-shape (2 by 1 or 1 by 2)
-        if ((rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2)) {
-            Piece destination = board[toRow][toCol];
-            return destination == null || !destination.getColor().equals(this.color);
+        if (!((rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2))) {
+            return false;
         }
 
-        return false;
+        Piece target = board[toRow][toCol];
+        return target == null || !target.getColor().equals(color);
     }
 
     @Override
