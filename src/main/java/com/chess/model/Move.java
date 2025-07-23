@@ -17,7 +17,6 @@ public class Move {
         this.capturedPiece = captured != null ? captured.getType() : null;
     }
 
-    // ✅ GETTERS (nécessaires pour Match.java)
     public int getFromRow() {
         return fromRow;
     }
@@ -54,3 +53,4 @@ public class Move {
         return move;
     }
 }
+
