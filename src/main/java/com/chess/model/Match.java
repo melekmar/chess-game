@@ -1,13 +1,12 @@
 package com.chess.model;
 
-/**
- * Manages the game state, player turns, and interactions between players and the board.
- */
 public class Match {
     private Board board;
     private Player whitePlayer;
     private Player blackPlayer;
     private Player currentPlayer;
+    private boolean gameOver = false;
+    private String winner = null;
 
     public Match() {
         this.board = new Board(); // Initialize the 8x8 board
@@ -17,11 +16,7 @@ public class Match {
         initializePieces(); // Set up all pieces on the board
     }
 
-    /**
-     * Initializes the chess board with standard piece placement.
-     */
     private void initializePieces() {
-        // Place pawns
         for (int col = 0; col < 8; col++) {
             Pawn blackPawn = new Pawn(1, col, "BLACK");
             Pawn whitePawn = new Pawn(6, col, "WHITE");
@@ -33,7 +28,6 @@ public class Match {
             whitePlayer.addPiece(whitePawn);
         }
 
-        // Place major pieces using ordered array
         String[] pieceOrder = {"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"};
 
         for (int col = 0; col < 8; col++) {
@@ -48,9 +42,6 @@ public class Match {
         }
     }
 
-    /**
-     * Factory method to create pieces based on type.
-     */
     private Piece createPiece(String type, int row, int col, String color) {
         switch (type) {
             case "Rook": return new Rook(row, col, color);
@@ -62,41 +53,41 @@ public class Match {
         }
     }
 
-    /**
-     * Attempts to move a piece and switch turns.
-     */
     public boolean move(int fromRow, int fromCol, int toRow, int toCol) {
+        if (gameOver) return false;
+
         Piece piece = board.getPiece(fromRow, fromCol);
         if (piece == null || !piece.getColor().equals(currentPlayer.getColor())) {
-            return false; // Invalid piece or wrong player's turn
+            return false;
         }
 
         if (!piece.isValidMove(toRow, toCol, board.getGrid())) {
-            return false; // Invalid movement logic
+            return false;
         }
 
-        // Handle capture
         Piece target = board.getPiece(toRow, toCol);
         if (target != null) {
-            if (target.getColor().equals(currentPlayer.getColor())) {
-                return false; // Can't capture own piece
-            }
+            if (target.getColor().equals(currentPlayer.getColor())) return false;
             getOpponent().removePiece(target);
+
+            if (target instanceof King) {
+                gameOver = true;
+                winner = currentPlayer.getColor();
+                System.out.println("Game Over! " + winner + " wins.");
+            }
         }
 
-        // Apply move
         board.setPiece(toRow, toCol, piece);
         board.setPiece(fromRow, fromCol, null);
         piece.setPosition(toRow, toCol);
 
-        // Switch player turn
-        currentPlayer = getOpponent();
+        if (!gameOver) {
+            currentPlayer = getOpponent();
+        }
+
         return true;
     }
 
-    /**
-     * Returns the opponent of the current player.
-     */
     public Player getOpponent() {
         return currentPlayer == whitePlayer ? blackPlayer : whitePlayer;
     }
@@ -109,7 +100,14 @@ public class Match {
         return currentPlayer;
     }
 
-    // ✅ NEW: Getters for both players
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
     public Player getWhitePlayer() {
         return whitePlayer;
     }
