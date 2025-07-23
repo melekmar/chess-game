@@ -40,4 +40,14 @@ public class ChessController {
 
         return response;
     }
+
+    @GetMapping("/status")
+    public Map<String, Object> getStatus() {
+        Map<String, Object> status = new HashMap<>();
+        status.put("currentPlayer", match.getCurrentPlayer().getColor());
+        status.put("whitePieces", match.getWhitePlayer().getPieces().size());
+        status.put("blackPieces", match.getBlackPlayer().getPieces().size());
+        return status;
+    }
 }
+

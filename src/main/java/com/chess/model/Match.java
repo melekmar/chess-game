@@ -1,5 +1,8 @@
 package com.chess.model;
 
+/**
+ * Manages the game state, player turns, and interactions between players and the board.
+ */
 public class Match {
     private Board board;
     private Player whitePlayer;
@@ -105,5 +108,13 @@ public class Match {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
-}
 
+    // ✅ NEW: Getters for both players
+    public Player getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public Player getBlackPlayer() {
+        return blackPlayer;
+    }
+}
