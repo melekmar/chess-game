@@ -1,8 +1,8 @@
 package com.chess.controller;
 
 import com.chess.model.Match;
-import com.chess.model.Piece;
 import com.chess.model.Move;
+import com.chess.model.Piece;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -47,9 +47,18 @@ public class ChessController {
         return response;
     }
 
-    @GetMapping("/history")
+    @GetMapping("/moves")
     public List<Move> getMoveHistory() {
         return match.getMoveHistory();
+    }
+
+    @PostMapping("/reset")
+    public Map<String, Object> resetGame() {
+        match.reset();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Game has been reset.");
+        return response;
     }
 }
 
