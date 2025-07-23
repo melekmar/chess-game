@@ -1,19 +1,23 @@
 package com.chess.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Match {
     private Board board;
     private Player whitePlayer;
     private Player blackPlayer;
     private Player currentPlayer;
     private boolean gameOver = false;
-    private Player winner = null; // Change from String to Player
+    private String winner = null;
+    private final List<Move> moveHistory = new ArrayList<>(); // ← new
 
     public Match() {
-        this.board = new Board(); // Initialize the 8x8 board
+        this.board = new Board();
         this.whitePlayer = new Player("WHITE");
         this.blackPlayer = new Player("BLACK");
-        this.currentPlayer = whitePlayer; // White starts
-        initializePieces(); // Set up all pieces on the board
+        this.currentPlayer = whitePlayer;
+        initializePieces();
     }
 
     private void initializePieces() {
@@ -72,14 +76,18 @@ public class Match {
 
             if (target instanceof King) {
                 gameOver = true;
-                winner = currentPlayer;
-                System.out.println("Game Over! " + winner.getColor() + " wins.");
+                winner = currentPlayer.getColor();
+                System.out.println("Game Over! " + winner + " wins.");
             }
         }
 
+        // Apply move
         board.setPiece(toRow, toCol, piece);
         board.setPiece(fromRow, fromCol, null);
         piece.setPosition(toRow, toCol);
+
+        // Log move
+        moveHistory.add(new Move(fromRow, fromCol, toRow, toCol, piece, target)); // ← new
 
         if (!gameOver) {
             currentPlayer = getOpponent();
@@ -104,7 +112,7 @@ public class Match {
         return gameOver;
     }
 
-    public Player getWinner() {
+    public String getWinner() {
         return winner;
     }
 
@@ -115,4 +123,9 @@ public class Match {
     public Player getBlackPlayer() {
         return blackPlayer;
     }
+
+    public List<Move> getMoveHistory() {
+        return moveHistory;
+    }
 }
+
