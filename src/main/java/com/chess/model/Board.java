@@ -8,43 +8,7 @@ public class Board {
     private Piece[][] grid; // 2D array representing the chess board
 
     public Board() {
-        grid = new Piece[8][8];
-        initializeBoard(); // Set up initial piece positions
-    }
-
-    /**
-     * Places all pieces in their initial positions at game start.
-     */
-    private void initializeBoard() {
-        // Place black major and minor pieces (row 0)
-        grid[0][0] = new Rook(0, 0, "BLACK");
-        grid[0][1] = new Knight(0, 1, "BLACK");
-        grid[0][2] = new Bishop(0, 2, "BLACK");
-        grid[0][3] = new Queen(0, 3, "BLACK");
-        grid[0][4] = new King(0, 4, "BLACK");
-        grid[0][5] = new Bishop(0, 5, "BLACK");
-        grid[0][6] = new Knight(0, 6, "BLACK");
-        grid[0][7] = new Rook(0, 7, "BLACK");
-
-        // Place black pawns (row 1)
-        for (int i = 0; i < 8; i++) {
-            grid[1][i] = new Pawn(1, i, "BLACK");
-        }
-
-        // Place white major and minor pieces (row 7)
-        grid[7][0] = new Rook(7, 0, "WHITE");
-        grid[7][1] = new Knight(7, 1, "WHITE");
-        grid[7][2] = new Bishop(7, 2, "WHITE");
-        grid[7][3] = new Queen(7, 3, "WHITE");
-        grid[7][4] = new King(7, 4, "WHITE");
-        grid[7][5] = new Bishop(7, 5, "WHITE");
-        grid[7][6] = new Knight(7, 6, "WHITE");
-        grid[7][7] = new Rook(7, 7, "WHITE");
-
-        // Place white pawns (row 6)
-        for (int i = 0; i < 8; i++) {
-            grid[6][i] = new Pawn(6, i, "WHITE");
-        }
+        grid = new Piece[8][8]; // Empty grid, pieces added by Match
     }
 
     public Piece getPiece(int row, int col) {
