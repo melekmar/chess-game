@@ -11,7 +11,7 @@ import java.util.Map;
 @RequestMapping("/api/chess")
 public class ChessController {
 
-    private Match match = new Match();
+    private final Match match = new Match();
 
     @GetMapping("/board")
     public Piece[][] getBoard() {
@@ -29,12 +29,10 @@ public class ChessController {
                 response.put("status", "success");
                 response.put("message", "Move completed successfully.");
                 response.put("nextPlayer", match.getCurrentPlayer().getColor());
-
                 if (match.isGameOver()) {
                     response.put("gameOver", true);
                     response.put("winner", match.getWinner());
                 }
-
             } else {
                 response.put("status", "error");
                 response.put("message", "Invalid move.");
@@ -47,24 +45,15 @@ public class ChessController {
         return response;
     }
 
-    @GetMapping("/status")
-    public Map<String, Object> getGameStatus() {
-        Map<String, Object> status = new HashMap<>();
-        status.put("gameOver", match.isGameOver());
-        status.put("winner", match.getWinner());
-        status.put("currentPlayer", match.getCurrentPlayer().getColor());
-        return status;
-    }
+    @GetMapping("/pieces")
+    public Map<String, Object> getRemainingPieces() {
+        Map<String, Object> result = new HashMap<>();
 
-    @PostMapping("/reset")
-    public Map<String, Object> resetGame() {
-        match = new Match();
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Game has been reset.");
-        return response;
+        result.put("WHITE", match.getWhitePlayer().getPieces());
+        result.put("BLACK", match.getBlackPlayer().getPieces());
+
+        return result;
     }
 }
-
 
 
