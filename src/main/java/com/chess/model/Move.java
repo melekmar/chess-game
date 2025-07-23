@@ -17,6 +17,35 @@ public class Move {
         this.capturedPiece = captured != null ? captured.getType() : null;
     }
 
+    // ✅ GETTERS (nécessaires pour Match.java)
+    public int getFromRow() {
+        return fromRow;
+    }
+
+    public int getFromCol() {
+        return fromCol;
+    }
+
+    public int getToRow() {
+        return toRow;
+    }
+
+    public int getToCol() {
+        return toCol;
+    }
+
+    public String getPieceType() {
+        return pieceType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getCapturedPiece() {
+        return capturedPiece;
+    }
+
     public String getNotation() {
         String move = color + " " + pieceType + " from (" + fromRow + "," + fromCol + ") to (" + toRow + "," + toCol + ")";
         if (capturedPiece != null) {

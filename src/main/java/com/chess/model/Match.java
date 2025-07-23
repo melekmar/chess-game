@@ -10,7 +10,8 @@ public class Match {
     private Player currentPlayer;
     private boolean gameOver = false;
     private String winner = null;
-    private final List<Move> moveHistory = new ArrayList<>(); // ← new
+
+    private List<Move> moveHistory = new ArrayList<>(); // ✅ historique des coups
 
     public Match() {
         this.board = new Board();
@@ -81,13 +82,12 @@ public class Match {
             }
         }
 
-        // Apply move
         board.setPiece(toRow, toCol, piece);
         board.setPiece(fromRow, fromCol, null);
         piece.setPosition(toRow, toCol);
 
-        // Log move
-        moveHistory.add(new Move(fromRow, fromCol, toRow, toCol, piece, target)); // ← new
+        // ✅ Ajouter le coup à l’historique
+        moveHistory.add(new Move(fromRow, fromCol, toRow, toCol, piece, target));
 
         if (!gameOver) {
             currentPlayer = getOpponent();
@@ -108,14 +108,6 @@ public class Match {
         return currentPlayer;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public String getWinner() {
-        return winner;
-    }
-
     public Player getWhitePlayer() {
         return whitePlayer;
     }
@@ -124,8 +116,37 @@ public class Match {
         return blackPlayer;
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    // ✅ Accès à l’historique des coups
     public List<Move> getMoveHistory() {
         return moveHistory;
     }
-}
 
+    // ✅ (Optionnel) Annuler le dernier coup
+    public boolean undoLastMove() {
+        if (moveHistory.isEmpty()) return false;
+
+        Move last = moveHistory.remove(moveHistory.size() - 1);
+        Piece piece = board.getPiece(last.getToRow(), last.getToCol());
+
+        board.setPiece(last.getFromRow(), last.getFromCol(), piece);
+        piece.setPosition(last.getFromRow(), last.getFromCol());
+        board.setPiece(last.getToRow(), last.getToCol(), null);
+
+        if (last.getCapturedPiece() != null) {
+            Piece captured = createPiece(last.getCapturedPiece(), last.getToRow(), last.getToCol(), getOpponent().getColor());
+            board.setPiece(last.getToRow(), last.getToCol(), captured);
+            getOpponent().addPiece(captured);
+        }
+
+        currentPlayer = getOpponent(); // revenir au joueur précédent
+        return true;
+    }
+}
