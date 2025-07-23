@@ -2,7 +2,6 @@ package com.chess.controller;
 
 import com.chess.model.Match;
 import com.chess.model.Piece;
-import com.chess.model.Player;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,9 +31,8 @@ public class ChessController {
                 response.put("nextPlayer", match.getCurrentPlayer().getColor());
 
                 if (match.isGameOver()) {
-                    Player winner = match.getWinner();
                     response.put("gameOver", true);
-                    response.put("winner", winner != null ? winner.getColor() : "None");
+                    response.put("winner", match.getWinner());
                 }
 
             } else {
@@ -50,11 +48,11 @@ public class ChessController {
     }
 
     @GetMapping("/status")
-    public Map<String, Object> getStatus() {
+    public Map<String, Object> getGameStatus() {
         Map<String, Object> status = new HashMap<>();
         status.put("gameOver", match.isGameOver());
+        status.put("winner", match.getWinner());
         status.put("currentPlayer", match.getCurrentPlayer().getColor());
-        status.put("winner", match.getWinner() != null ? match.getWinner().getColor() : null);
         return status;
     }
 }
