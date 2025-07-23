@@ -11,7 +11,7 @@ import java.util.Map;
 @RequestMapping("/api/chess")
 public class ChessController {
 
-    private final Match match = new Match();
+    private Match match = new Match(); // instance non finalisée pour pouvoir reset
 
     @GetMapping("/board")
     public Piece[][] getBoard() {
@@ -29,10 +29,6 @@ public class ChessController {
                 response.put("status", "success");
                 response.put("message", "Move completed successfully.");
                 response.put("nextPlayer", match.getCurrentPlayer().getColor());
-                if (match.isGameOver()) {
-                    response.put("gameOver", true);
-                    response.put("winner", match.getWinner());
-                }
             } else {
                 response.put("status", "error");
                 response.put("message", "Invalid move.");
@@ -45,26 +41,24 @@ public class ChessController {
         return response;
     }
 
-    @GetMapping("/pieces")
-    public Map<String, Object> getRemainingPieces() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("WHITE", match.getWhitePlayer().getPieces());
-        result.put("BLACK", match.getBlackPlayer().getPieces());
-        return result;
-    }
-
     @GetMapping("/status")
-    public Map<String, Object> getGameStatus() {
+    public Map<String, Object> getStatus() {
         Map<String, Object> status = new HashMap<>();
         status.put("currentPlayer", match.getCurrentPlayer().getColor());
         status.put("gameOver", match.isGameOver());
         status.put("winner", match.getWinner());
-        status.put("remainingPieces", Map.of(
-                "WHITE", match.getWhitePlayer().getPieces().size(),
-                "BLACK", match.getBlackPlayer().getPieces().size()
-        ));
+        status.put("whiteRemaining", match.getWhitePlayer().getPieces().size());
+        status.put("blackRemaining", match.getBlackPlayer().getPieces().size());
         return status;
     }
-}
 
+    @PostMapping("/reset")
+    public Map<String, Object> resetGame() {
+        match = new Match(); // réinitialiser la partie
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Game has been reset.");
+        return response;
+    }
+}
 
