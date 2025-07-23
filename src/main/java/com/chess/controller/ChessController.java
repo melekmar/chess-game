@@ -1,8 +1,8 @@
 package com.chess.controller;
 
 import com.chess.model.Match;
-import com.chess.model.Move;
 import com.chess.model.Piece;
+import com.chess.model.Move;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,6 +31,10 @@ public class ChessController {
                 response.put("status", "success");
                 response.put("message", "Move completed successfully.");
                 response.put("nextPlayer", match.getCurrentPlayer().getColor());
+                response.put("gameOver", match.isGameOver());
+                if (match.isGameOver()) {
+                    response.put("winner", match.getWinner());
+                }
             } else {
                 response.put("status", "error");
                 response.put("message", "Invalid move.");
@@ -44,10 +48,8 @@ public class ChessController {
     }
 
     @GetMapping("/history")
-    public List<String> getMoveHistory() {
-        return match.getMoveHistory().stream()
-                .map(Move::getNotation)
-                .toList();
+    public List<Move> getMoveHistory() {
+        return match.getMoveHistory();
     }
 }
 
