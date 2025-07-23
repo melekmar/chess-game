@@ -49,5 +49,22 @@ public class ChessController {
                 .map(Move::getNotation)
                 .toList();
     }
+
+    @PostMapping("/undo")
+    public Map<String, Object> undoLastMove() {
+        Map<String, Object> response = new HashMap<>();
+        boolean undone = match.undoLastMove();
+
+        if (undone) {
+            response.put("status", "success");
+            response.put("message", "Last move has been undone.");
+            response.put("nextPlayer", match.getCurrentPlayer().getColor());
+        } else {
+            response.put("status", "error");
+            response.put("message", "No move to undo.");
+        }
+
+        return response;
+    }
 }
 
