@@ -1,8 +1,8 @@
 package com.chess.controller;
 
 import com.chess.model.Match;
-import com.chess.model.Piece;
 import com.chess.model.Move;
+import com.chess.model.Piece;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,8 +21,10 @@ public class ChessController {
     }
 
     @PostMapping("/move")
-    public Map<String, Object> movePiece(@RequestParam int fromRow, @RequestParam int fromCol,
-                                         @RequestParam int toRow, @RequestParam int toCol) {
+    public Map<String, Object> movePiece(@RequestParam("fromRow") int fromRow,
+                                         @RequestParam("fromCol") int fromCol,
+                                         @RequestParam("toRow") int toRow,
+                                         @RequestParam("toCol") int toCol) {
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -31,6 +33,8 @@ public class ChessController {
                 response.put("status", "success");
                 response.put("message", "Move completed successfully.");
                 response.put("nextPlayer", match.getCurrentPlayer().getColor());
+                response.put("gameOver", match.isGameOver());
+                response.put("winner", match.getWinner());
             } else {
                 response.put("status", "error");
                 response.put("message", "Invalid move.");
@@ -45,26 +49,15 @@ public class ChessController {
 
     @GetMapping("/history")
     public List<String> getMoveHistory() {
-        return match.getMoveHistory().stream()
-                .map(Move::getNotation)
-                .toList();
+        return match.getMoveHistory().stream().map(Move::getNotation).toList();
     }
 
-    @PostMapping("/undo")
-    public Map<String, Object> undoLastMove() {
-        Map<String, Object> response = new HashMap<>();
-        boolean undone = match.undoLastMove();
-
-        if (undone) {
-            response.put("status", "success");
-            response.put("message", "Last move has been undone.");
-            response.put("nextPlayer", match.getCurrentPlayer().getColor());
-        } else {
-            response.put("status", "error");
-            response.put("message", "No move to undo.");
-        }
-
-        return response;
+    @PostMapping("/reset")
+    public Map<String, String> resetGame() {
+        match.reset();
+        Map<String, String> result = new HashMap<>();
+        result.put("message", "Game reset successfully.");
+        return result;
     }
 }
 
