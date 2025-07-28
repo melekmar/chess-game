@@ -95,3 +95,31 @@ Feel free to contribute, fork, or use this project for learning purposes.
 ---
 
 Enjoy playing chess with your own backend!
+
+💡 Optional Next Steps (Suggestions)
+If you want to continue building on this project:
+
+🛡 Add Check / Checkmate Detection
+Detect if the opponent's King is under threat after a move.
+
+Add a isCheck() and isCheckmate() method inside Match.
+
+👑 Add Special Moves
+Castling (rook and king move together)
+
+En passant (special pawn capture)
+
+Promotion (pawn reaching last row becomes Queen or other)
+
+🖥 Add a Frontend
+Simple React or JavaFX UI
+
+Drag & drop or click-to-move pieces visually
+
+👥 Multiplayer or Auth
+Add player sessions and match IDs
+
+Store moves or games using a database
+
+🧪 Write Tests
+Use JUnit to test each piece's movement logic and game flow
