@@ -1,4 +1,5 @@
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\controller\ChessController.java
+C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\controller\GlobalExceptionHandler.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\Player.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\Move.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\Queen.java
@@ -6,6 +7,7 @@ C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\service\GameService.ja
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\Pawn.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\King.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\Bishop.java
+C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\MoveValidationException.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\ChessApplication.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\Rook.java
 C:\Users\Marao\Desktop\chess-game\src\main\java\com\chess\model\Match.java

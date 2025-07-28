@@ -3,20 +3,26 @@ package com.chess.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a chess match.
+ * Handles the board state, players, turn management, and move history.
+ */
 public class Match {
-    private Board board;
-    private Player whitePlayer;
-    private Player blackPlayer;
-    private Player currentPlayer;
-    private boolean gameOver = false;
-    private String winner = null;
+    private Board board; // The chess board
+    private Player whitePlayer; // White side
+    private Player blackPlayer; // Black side
+    private Player currentPlayer; // Whose turn it is
+    private boolean gameOver = false; // True if the game has ended
+    private String winner = null; // Stores the winner color if game is over
 
-    private final List<Move> moveHistory = new ArrayList<>();
+    private final List<Move> moveHistory = new ArrayList<>(); // History of all valid moves
 
+    // Constructor initializes a new game
     public Match() {
         reset();
     }
 
+    // Resets the game to the starting position
     public void reset() {
         this.board = new Board();
         this.whitePlayer = new Player("WHITE");
@@ -28,6 +34,7 @@ public class Match {
         initializePieces();
     }
 
+    // Sets up all pieces on the board
     private void initializePieces() {
         for (int col = 0; col < 8; col++) {
             Pawn blackPawn = new Pawn(1, col, "BLACK");
@@ -54,6 +61,7 @@ public class Match {
         }
     }
 
+    // Creates a piece instance based on type
     private Piece createPiece(String type, int row, int col, String color) {
         switch (type) {
             case "Rook": return new Rook(row, col, color);
@@ -65,37 +73,40 @@ public class Match {
         }
     }
 
+    // Makes a move after validation
     public boolean move(int fromRow, int fromCol, int toRow, int toCol) {
         if (gameOver) {
-            throw new MoveValidationException("La partie est terminée.");
+            throw new MoveValidationException("The game is already over.");
         }
 
         Piece piece = board.getPiece(fromRow, fromCol);
         if (piece == null) {
-            throw new MoveValidationException("Aucune pièce à cette position.");
+            throw new MoveValidationException("No piece at the selected position.");
         }
 
         if (!piece.getColor().equals(currentPlayer.getColor())) {
-            throw new MoveValidationException("Ce n’est pas le tour du joueur " + piece.getColor() + ".");
+            throw new MoveValidationException("It's not " + piece.getColor() + "'s turn.");
         }
 
         if (!piece.isValidMove(toRow, toCol, board.getGrid())) {
-            throw new MoveValidationException("Déplacement invalide pour la pièce " + piece.getType() + ".");
+            throw new MoveValidationException("Invalid move for piece " + piece.getType() + ".");
         }
 
         Piece target = board.getPiece(toRow, toCol);
         if (target != null && target.getColor().equals(currentPlayer.getColor())) {
-            throw new MoveValidationException("Impossible de capturer votre propre pièce.");
+            throw new MoveValidationException("You cannot capture your own piece.");
         }
 
-        // Enregistrement du mouvement
+        // Record the move
         Move move = new Move(fromRow, fromCol, toRow, toCol, piece, target);
         moveHistory.add(move);
 
+        // Update board and piece position
         board.setPiece(toRow, toCol, piece);
         board.setPiece(fromRow, fromCol, null);
         piece.setPosition(toRow, toCol);
 
+        // If opponent's piece captured
         if (target != null) {
             getOpponent().removePiece(target);
             if (target instanceof King) {
@@ -111,15 +122,18 @@ public class Match {
         return true;
     }
 
+    // Reverses the last move (undo feature)
     public boolean undoLastMove() {
         if (moveHistory.isEmpty() || gameOver) return false;
 
         Move lastMove = moveHistory.remove(moveHistory.size() - 1);
         Piece movedPiece = board.getPiece(lastMove.getToRow(), lastMove.getToCol());
 
+        // Move the piece back
         board.setPiece(lastMove.getFromRow(), lastMove.getFromCol(), movedPiece);
         movedPiece.setPosition(lastMove.getFromRow(), lastMove.getFromCol());
 
+        // Restore captured piece if any
         if (lastMove.getCapturedPiece() != null) {
             Piece restored = createPiece(
                 lastMove.getCapturedPiece(),
@@ -139,10 +153,12 @@ public class Match {
         return true;
     }
 
+    // Returns the opponent of the current player
     public Player getOpponent() {
         return currentPlayer == whitePlayer ? blackPlayer : whitePlayer;
     }
 
+    // Getters
     public Board getBoard() {
         return board;
     }
@@ -171,3 +187,4 @@ public class Match {
         return moveHistory;
     }
 }
+
